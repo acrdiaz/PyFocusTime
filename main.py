@@ -9,18 +9,15 @@ def notify(message):
     
     if os.name == 'nt':  # Windows
         try:
-            from plyer import notification
-            notification.notify(
-                title="Pomodoro Timer",
-                message=message,
-                timeout=5
-            )
+            import winsound
+            # Play a beep sound (frequency=800, duration=1000ms)
+            winsound.Beep(800, 1000)
         except Exception as e:
-            # If notification fails, we already have the print fallback above
+            # If sound notification fails, we already have the print fallback above
             pass
     else:  # Unix/Linux/MacOS
         try:
-            os.system(f'notify-send "Pomodoro Timer" "{message}"')
+            os.system(f'notify-send "PyFocusTime Timer" "{message}"')
         except Exception as e:
             # If system notification fails, we already have the print fallback above
             pass
@@ -29,8 +26,8 @@ def format_time(seconds):
     """Format seconds into MM:SS string."""
     return str(timedelta(seconds=seconds))[2:7]
 
-def pomodoro_timer(focus_time=25, break_time=5):
-    """Run a Pomodoro timer with specified focus and break durations."""
+def focus_timer(focus_time=25, break_time=5):
+    """Run a PyFocusTime timer with specified focus and break durations."""
     focus_seconds = focus_time * 60
     break_seconds = break_time * 60
     
@@ -56,26 +53,62 @@ def pomodoro_timer(focus_time=25, break_time=5):
             
             notify("Break time is over! Ready for another focus session?")
             
-            # Ask if user wants to continue
-            response = input("\n\nPress Enter to start next session or 'q' to quit: ")
-            if response.lower() == 'q':
+            # Ask if user wants to continue with timeout
+            print("\n\nPress Enter to start next session or 'q' to quit: ", end='', flush=True)
+            
+            # Set up a timeout for user input
+            import threading
+            import sys
+            
+            response = [None]
+            input_timeout = 10  # 60 seconds timeout
+            stop_thread = False
+            
+            def get_input():
+                while not stop_thread:
+                    try:
+                        response[0] = input()
+                        break
+                    except EOFError:
+                        # Handle Ctrl+C in input thread
+                        break
+            
+            input_thread = threading.Thread(target=get_input)
+            input_thread.daemon = True
+            input_thread.start()
+            
+            # Wait for input or timeout
+            start_wait_time = time.time()
+            while input_thread.is_alive():
+                # Check if a minute has passed
+                if time.time() - start_wait_time >= input_timeout:
+                    # Timeout occurred, notify user
+                    print("\nWaiting for your response...", flush=True)
+                    notify("Please respond to continue or quit the PyFocusTime session")
+                    # Reset the timer for the next notification
+                    start_wait_time = time.time()
+                # Sleep briefly to avoid high CPU usage
+                time.sleep(1)
+            
+            if response[0] and response[0].lower() == 'q':
                 break
     except KeyboardInterrupt:
-        print("\n\nGoodbye! Pomodoro Timer stopped.")
+        stop_thread = True
+        print("\n\nGoodbye! PyFocusTime Timer stopped.")
         return
 
 if __name__ == "__main__":
     try:
-        parser = argparse.ArgumentParser(description='PyFocusTime - Your Pomodoro Timer')
-        parser.add_argument('-f', '--focus', type=float, default=25,
+        parser = argparse.ArgumentParser(description='PyFocusTime - Your Focus Timer')
+        parser.add_argument('-f', '--focus', type=float, default=0.20,
                           help='Focus time duration in minutes (default: 25)')
-        parser.add_argument('-b', '--break-time', type=float, default=5,
+        parser.add_argument('-b', '--break-time', type=float, default=0.05,
                           help='Break time duration in minutes (default: 5)')
         
         args = parser.parse_args()
         
-        print("Welcome to PyFocusTime - Your Pomodoro Timer!")
+        print("Welcome to PyFocusTime - Your PyFocusTime Timer!")
         print(f"Settings: {args.focus} minutes focus + {args.break_time} minutes break")
-        pomodoro_timer(focus_time=args.focus, break_time=args.break_time)
+        focus_timer(focus_time=args.focus, break_time=args.break_time)
     except KeyboardInterrupt:
-        print("\n\nGoodbye! Pomodoro Timer stopped.")
+        print("\n\nGoodbye! PyFocusTime Timer stopped.")
