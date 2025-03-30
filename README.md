@@ -42,12 +42,12 @@ The application will:
 
 ## How It Works
 
-PyFocusTime follows the Pomodoro Technique:
+PyFocusTime follows the PyFocusTime Technique:
 1. Work focused for 25 minutes
 2. Take a short 5-minute break
 3. Repeat the cycle
 
-The application shows a real-time countdown and sends desktop notifications to help you stay on track with your work/break cycles.
+The application shows a real-time countdown and sends sound notifications (Windows) or system notifications (Linux/MacOS) to help you stay on track with your work/break cycles. It also reminds you every minute if you don't respond after a break session.
 
 ## Contributing
 

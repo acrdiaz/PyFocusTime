@@ -61,7 +61,7 @@ def focus_timer(focus_time=25, break_time=5):
             import sys
             
             response = [None]
-            input_timeout = 10  # 60 seconds timeout
+            input_timeout = 60  # 60 seconds timeout
             stop_thread = False
             
             def get_input():
@@ -100,9 +100,9 @@ def focus_timer(focus_time=25, break_time=5):
 if __name__ == "__main__":
     try:
         parser = argparse.ArgumentParser(description='PyFocusTime - Your Focus Timer')
-        parser.add_argument('-f', '--focus', type=float, default=0.20,
+        parser.add_argument('-f', '--focus', type=float, default=25,
                           help='Focus time duration in minutes (default: 25)')
-        parser.add_argument('-b', '--break-time', type=float, default=0.05,
+        parser.add_argument('-b', '--break-time', type=float, default=5,
                           help='Break time duration in minutes (default: 5)')
         
         args = parser.parse_args()
