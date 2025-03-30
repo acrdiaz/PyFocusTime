@@ -37,9 +37,9 @@ python main.py
 
 The application will:
 1. Start a 25-minute focus session
-2. Display a notification when the focus session ends
+2. Play a beep sound when the focus session ends
 3. Begin a 5-minute break
-4. Notify you when the break is over
+4. Play a beep sound when the break is over
 5. Ask if you want to start another session
 
 ## How It Works
