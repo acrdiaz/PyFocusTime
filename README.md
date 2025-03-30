@@ -1,19 +1,17 @@
 # PyFocusTime
 
-A simple Pomodoro Timer application written in Python that helps you stay focused using the Pomodoro Technique.
+A simple focus timer application written in Python that helps you stay productive using timed focus and break sessions.
 
 ## Features
 - Customizable focus and break durations
-- Desktop notifications
+- Audio notifications (Windows) / System notifications (Linux/MacOS)
 - Command-line interface
 - Cross-platform support (Windows, Linux, MacOS)
+- Reminder notifications if you don't respond after a break
 
 ## Requirements
 - Python 3.6 or higher
-- Required packages:
-  ```bash
-  pip install plyer
-  ```
+- No external packages required!
 
 ## Installation
 
